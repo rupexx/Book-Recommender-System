@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Recommender System</title>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: #FFF3E0; /* Off-white background color */
+            font-family: Arial, sans-serif;
+        }
+        .nav-link {
+            color: #fff!important;
+        }
+        .nav-link:hover {
+            color: #ccc!important;
+        }
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            cursor: pointer; /* Make the card interactive */
+            padding: 10px; /* Added padding to the card */
+            height: 100%; /* Ensure each card occupies same height */
+        }
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
+            transform: scale(1.05); /* Scale the card on hover */
+        }
+        .card-img-top {
+            width: 100%;
+            height: 200px; /* Set a fixed height for the image */
+            object-fit: contain; /* Display entire image within dimensions */
+            border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+            padding: 20px;
+            height: 100%; /* Ensure consistent height for card bodies */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-body p {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .card-body h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .search-form {
+            padding: 30px; /* Added padding around the search form */
+            margin-bottom: 20px; /* Added margin bottom to separate from cards */
+        }
+        .search-btn-wrapper {
+            text-align: center; /* Center the button */
+        }
+        .search-btn {
+            margin-top: 10px; /* Optional: Separate button from input */
+            padding: 15px 20px; /* Adjust padding to increase button size */
+        }
+        .mb-4 {
+            margin-bottom: 20px; /* Adjust margin between cards */
+        }
+        .error-message {
+            color: red;
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg" style="background-color:#EF5350">
+    <a class="navbar-brand" href="#" style="font-size:30px; font-weight: bold; color: #FFEBEE; margin:5px; font-family: cursive;" >Book Pickerr</a>
+
+    <div>
+        <ul class="navbar-nav" style="margin:5px; font-family: cursive;">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/recommend">Recommend</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 style="font-size:50px; font-weight: bold; color: #FB8C00; text-align: center; font-family: cursive;">Similar Books You May Like</h1>
+            <form action="/recommend_books" method="POST" class="search-form">
+                <input name="user_input" type="text" class="form-control"><br>
+                <div class="search-btn-wrapper">
+                    <input type="submit" class="btn btn-lg btn-warning search-btn" value="Recommend">
+                </div>
+            </form>
+            {% if error %}
+                <p class="error-message">{{ error }}</p>
+            {% endif %}
+        </div>
+
+        {% if data %}
+
+            {% for i in data %}
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <img class="card-img-top" src="{{ i[2] }}">
+                        <p>{{ i[0] }}</p>
+                        <h4>{{ i[1] }}</h4>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+</div>
+
+</body>
+</html>
