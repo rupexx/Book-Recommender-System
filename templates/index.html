@@ -9,6 +9,11 @@
         body {
             background-color: #FFF3E0; /* Off-white background color */
             font-family: Arial, sans-serif;
+            background-image: url('https://img.freepik.com/free-photo/background-gradient-lights_23-2149304993.jpg?w=826&t=st=1719860802~exp=1719861402~hmac=40d8559db968fbb71d7c66a06f9b07b27233865472fc3c6137f051586cd1c3bc'); /* Background image URL */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* No repeat */
+            background-attachment: fixed; /* Fixed position */
+            background-blend-mode: multiply; /* Blend mode for better contrast with text */
         }
         .nav-link {
             color: #fff!important;
@@ -19,8 +24,10 @@
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
             transition: 0.3s;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
             cursor: pointer; /* Make the card interactive */
-            height: 80%; /* Ensure cards take the full height of their container */
+            height: 90%; /* Ensure cards take the full height of their container */
         }
         .card:hover {
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
@@ -37,64 +44,90 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            height: 100%; /* Ensure the card body takes the full height */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for card body */
+            border-radius: 10px; /* Rounded corners */
         }
         .card-body p {
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 20px; /* Reduced margin */
+            margin-bottom: 10px; /* Reduced margin */
             text-align: center;
         }
         .card-body h4 {
             font-size: 16px;
-            margin-bottom: 20px; /* Reduced margin */
+            margin-bottom: 10px; /* Reduced margin */
             text-align: center;
         }
         .fixed-card-height {
-            height: 450px; /* Set a fixed height for all cards */
+            height: 420px; /* Set a fixed height for all cards */
+        }
+        .reader-choice-heading {
+            font-size: 50px;
+            font-weight: bold;
+            color: #FB8C00;
+            text-align: center;
+            font-family: cursive;
+            margin-top: 20px; /* Adjust top margin to align better */
+            margin-bottom: 30px; /* Increase bottom margin for space */
+            background-color: #FFF; /* White background */
+            padding: 10px; /* Padding for readability */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle box shadow */
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg" style="background-color:#EF5350;">
-        <a class="navbar-brand" href="#" style="font-size:30px; font-weight: bold; color: #FFEBEE; margin:5px; font-family: cursive;" >Book Pickerr</a>
+<nav class="navbar navbar-expand-lg" style="background-color:#E62020;">
+    <a class="navbar-brand" href="#" style="font-size:30px; font-weight: bold; color: #FFEBEE; margin:5px; font-family: cursive;">Book Pickerr</a>
 
-        <div>
-            <ul class="navbar-nav" style="margin:5px; font-family: cursive;">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">Home </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/recommend">Recommend</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact">Contact</a>
-                </li>
-            </ul>
+    <div>
+        <ul class="navbar-nav" style="margin:5px; font-family: cursive;">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/recommend">Recommend</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact Us</a>
+            </li>
+            {% if logged_in %}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="reader-choice-heading" style="background-color: rgba(255, 255, 255, 0.5); border-radius: 10px;">Reader's Choice Picks</h1>
         </div>
-    </nav>
 
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 style=" font-size:50px; font-weight: bold; color: #FB8C00; text-align: center; font-family: cursive;">Reader's Choice Picks</h1>
-            </div>
-
-            {% for i in range(20) %}
-            <div class="col-md-3 mb-4">
-                <div class="card fixed-card-height">
-                    <img class="card-img-top" src="{{ image[i]|default('fallback-image-url.jpg') }}">
-                    <div class="card-body">
-                        <p>{{ book_name[i] }}</p>
-                        <h4>{{ author[i] }}</h4>
-                        <h4>Votes - {{ votes[i] }}</h4>
-                        <h4>Rating - {{ rating[i] }}</h4>
-                    </div>
+        {% for i in range(20) %}
+        <div class="col-md-3 mb-4">
+            <div class="card fixed-card-height">
+                <img class="card-img-top" src="{{ image[i]|default('fallback-image-url.jpg') }}">
+                <div class="card-body">
+                    <p>{{ book_name[i] }}</p>
+                    <h4>{{ author[i] }}</h4>
+                    <h4>Votes - {{ votes[i] }}</h4>
+                    <h4>Rating - {{ rating[i] }}</h4>
                 </div>
             </div>
-            {% endfor %}
-
         </div>
+        {% endfor %}
+
     </div>
+</div>
+
 </body>
 </html>

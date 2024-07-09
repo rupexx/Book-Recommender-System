@@ -3,65 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <title>Book Recommender System</title>
-    <!-- Latest compiled and minified CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #FFF3E0; /* Off-white background color */
             font-family: Arial, sans-serif;
+            background-image: url('https://img.freepik.com/free-photo/background-gradient-lights_23-2149304993.jpg?w=826&t=st=1719860802~exp=1719861402~hmac=40d8559db968fbb71d7c66a06f9b07b27233865472fc3c6137f051586cd1c3bc'); /* Background image URL */
+            background-size: cover; /* Cover the entire background */
+            background-repeat: no-repeat; /* No repeat */
+            background-attachment: fixed; /* Fixed position */
+            background-blend-mode: multiply; /* Blend mode for better contrast with text */
+            overflow-x: hidden;
         }
         .nav-link {
-            color: #fff!important;
+            color: #fff !important;
         }
         .nav-link:hover {
-            color: #ccc!important;
+            color: #ccc !important;
         }
         .card {
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
             transition: 0.3s;
-            cursor: pointer; /* Make the card interactive */
-            padding: 10px; /* Added padding to the card */
-            height: 100%; /* Ensure each card occupies same height */
+            cursor: pointer;
+            padding: 10px;
+            height: 100%;
         }
         .card:hover {
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
-            transform: scale(1.05); /* Scale the card on hover */
+            transform: scale(1.05);
         }
         .card-img-top {
             width: 100%;
-            height: 200px; /* Set a fixed height for the image */
-            object-fit: contain; /* Display entire image within dimensions */
+            height: 200px;
+            object-fit: contain;
             border-radius: 10px 10px 0 0;
         }
         .card-body {
             padding: 20px;
-            height: 100%; /* Ensure consistent height for card bodies */
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+
         }
         .card-body p {
+            padding-top: 20px;
             font-size: 18px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Reduced margin */
+            text-align: center;
         }
         .card-body h4 {
             font-size: 16px;
-            margin-bottom: 10px;
+            margin-bottom: 10px; /* Reduced margin */
+            text-align: center;
         }
         .search-form {
-            padding: 30px; /* Added padding around the search form */
-            margin-bottom: 20px; /* Added margin bottom to separate from cards */
+            padding: 30px;
+            margin-bottom: 20px;
         }
         .search-btn-wrapper {
-            text-align: center; /* Center the button */
+            text-align: center;
         }
         .search-btn {
-            margin-top: 10px; /* Optional: Separate button from input */
-            padding: 15px 20px; /* Adjust padding to increase button size */
+            margin-top: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow to the recommend button */
+            transition: box-shadow 0.3s ease; /* Smooth transition for the shadow effect */
+        }
+        .search-btn:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
         }
         .mb-4 {
-            margin-bottom: 20px; /* Adjust margin between cards */
+            margin-bottom: 20px;
         }
         .error-message {
             color: red;
@@ -69,34 +85,62 @@
             margin-top: 10px;
             text-align: center;
         }
+        .suggestions {
+            border: 1px solid #ccc;
+            background-color: white;
+            position: absolute;
+            z-index: 1000;
+            width: calc(95%); /* Match the width of the search bar */
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .suggestions p {
+            margin: 0;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestions p:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg" style="background-color:#EF5350">
-    <a class="navbar-brand" href="#" style="font-size:30px; font-weight: bold; color: #FFEBEE; margin:5px; font-family: cursive;" >Book Pickerr</a>
+<nav class="navbar navbar-expand-lg" style="background-color:#E62020;">
+    <a class="navbar-brand" href="#" style="font-size:30px; font-weight: bold; color: #FFEBEE; margin:5px; font-family: cursive;">Book Pickerr</a>
 
     <div>
         <ul class="navbar-nav" style="margin:5px; font-family: cursive;">
             <li class="nav-item active">
-                <a class="nav-link" href="/">Home </a>
+                <a class="nav-link" href="/">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/recommend">Recommend</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/contact">Contact</a>
+                <a class="nav-link" href="/contact">Contact Us</a>
             </li>
+            {% if logged_in %}
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="/login">Login</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
 
-<div class="container py-5">
+<div class="container px-0"> <!-- Adjusted px-0 for no padding -->
     <div class="row">
         <div class="col-md-12">
-            <h1 style="font-size:50px; font-weight: bold; color: #FB8C00; text-align: center; font-family: cursive;">Similar Books You May Like</h1>
-            <form action="/recommend_books" method="POST" class="search-form">
-                <input name="user_input" type="text" class="form-control"><br>
+            <h1 style="font-size:50px; font-weight: bold; color: #FB8C00; text-align: center; font-family: cursive; background-color: #FFF; margin-top: 20px; margin-bottom: 30px; padding: 10px; background-color: rgba(255, 255, 255, 0.5); border-radius: 10px;">Recommendation Section</h1>
+            <form action="/recommend_books" method="POST" class="search-form position-relative">
+                <input id="search-input" name="user_input" type="text" class="form-control" placeholder="Search for books or genres...">
+                <div class="suggestions" id="suggestions"></div>
+                <br>
                 <div class="search-btn-wrapper">
                     <input type="submit" class="btn btn-lg btn-warning search-btn" value="Recommend">
                 </div>
@@ -107,7 +151,6 @@
         </div>
 
         {% if data %}
-
             {% for i in data %}
             <div class="col-md-3 mb-4">
                 <div class="card">
@@ -120,9 +163,33 @@
             </div>
             {% endfor %}
         {% endif %}
-
     </div>
 </div>
+
+<script>
+    document.getElementById('search-input').addEventListener('input', function() {
+        let query = this.value;
+        if (query.length < 3) {
+            document.getElementById('suggestions').innerHTML = '';
+            return;
+        }
+        fetch('/search_suggestions?q=' + query)
+            .then(response => response.json())
+            .then(data => {
+                let suggestions = document.getElementById('suggestions');
+                suggestions.innerHTML = '';
+                data.forEach(item => {
+                    let p = document.createElement('p');
+                    p.textContent = item;
+                    p.addEventListener('click', function() {
+                        document.getElementById('search-input').value = item;
+                        suggestions.innerHTML = '';
+                    });
+                    suggestions.appendChild(p);
+                });
+            });
+    });
+</script>
 
 </body>
 </html>
